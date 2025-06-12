@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Segment This Thing: Foveated Tokenization for Efficient Point-Prompted Segmentation</title>
+    <style>
+        body {
+            font-family: "Open Sans", "Helvetica Neue", "Roboto", Arial, sans-serif;
+            max-width: 900px;
+            margin: auto;
+            padding: 2em;
+            line-height: 1.4;
+            color: #333;
+        }
+        div.header {
+            text-align: center;
+        }
+        div.header a {
+            text-decoration: none;
+            color: #000;
+        }
+        h1 {
+            color: #000;
+            font-size: 3em;
+            margin-block-end: 0;
+        }
+        h2 {
+            margin-block-start: 0;
+            font-size: 1.8em;
+        }
+        .authors {
+            text-align: center;
+            margin-block-end: 0.8em;
+        }
+        .authors div {   
+            width: 25%;
+            font-size: 1.25em;
+            display: inline-block;
+        }
+        div.affiliation {
+            font-size: 1.5em;
+            margin-block-end: 0.5em;
+        }
+        div.conference {
+            font-size: 1.2em;                   
+            font-weight: lighter;
+            margin-block-end: 0.8em;
+        }
+        .links {
+            text-align: center;
+            font-size: 1.5em;
+            line-height: 1.0em;
+        }
+        .links div {
+            margin: 0 2em;
+            display: inline-flex;
+            align-items: cetner;
+            height: 1.5em;
+        }
+        .links img {
+            max-height: 80%;
+            margin: auto 0.5em auto auto;
+        }
+        .links a{
+            margin: auto;
+            padding-top: 0.1em;
+        }
+        .teaser {
+            width: 100%;
+            max-width: 800px;
+            margin-top: 1em;
+        }
+        .figure {
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+            max-width: 95%;
+        }
+        .figure img {
+            max-width: 100%;
+        }
+        .figure div {
+            display: inline-block;
+        }
+        .figure .caption {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        .section {
+            margin-top: 2em;
+        }
+        footer {
+            margin-top: 4em;
+            font-size: 0.9em;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+    <h1>Segment This Thing</h1>
+    <h2>Foveated Tokenization for Efficient Point-Prompted Segmentation</h2>
+    
+    <div class="authors">
+        <div><a href="https://tschmidt23.github.io/">Tanner Schmidt</a></div>
+        <div><a href="https://rapiderobot.bitbucket.io/">Richard Newcombe</a></div>
+    </div>
+    <div class="affiliation">Meta Reality Labs</div>
+    <div class="conference">
+        Published at CVPR 2025
+    </div>
+    
+    <div class="links">
+        <div>
+            <img src="figs/arxiv-logomark-small.png" alt="Foveated Tokenization"/>
+            <a href="https://openaccess.thecvf.com/content/CVPR2025/papers/Schmidt_Segment_This_Thing_Foveated_Tokenization_for_Efficient_Point-Prompted_Segmentation_CVPR_2025_paper.pdf">Paper</a>
+        </div>
+        <div>
+            <img src="figs/github-mark.png" alt="Foveated Tokenization"/>
+            <a href="https://github.com/facebookresearch/segment_this_thing">Code</a>
+        </div>
+    </div>
+    
+    </div>
+
+    <div class="section">
+        <h2>Overview</h2>
+        <p> 
+        Segment This Thing is a novel image segmentation model, based on the Segment Anything Model (SAM) and
+        designed for efficiency. Whereas prior works have improved the efficiency of SAM but decreasing model
+        size, we maintain the model size and instead decrease the <i>input</i> size. This is accomplished
+        using our novel <b>Foveated Tokenization</b>, a biologically-inspired tokenization scheme which extracts
+	high-resolution patches centered on the prompt and progressively downsampled patches from the surrounding
+	image regions.
+        </p>
+            
+        <div class="figure">
+            <div style="width: 37%"><img width=100% src="figs/toy_foveated_tokenization/viz_grid.jpg" alt="Grid-based Tokenization"/> <span class="caption">Patch Tokenization</span></div>
+            <div style="width: 1em"></div>
+            <div style="width: 37%"><img width=100% src="figs/toy_foveated_tokenization/viz_pattern.jpg" alt="Foveated Tokenization"/> <span class="caption">Foveated Tokenization</span></div>
+        </div>
+    
+        <p>Foveated tokenization has two key advantages over the patch tokenizating used in SAM and other
+        Vision Transformer-based models:
+        </p>
+        <ol>
+            <li><b>Reduced pixel count:</b> A foveated image as consumed by Segment This Thing requires <b>~24x</b> fewer pixels to store compared to the equivalent SAM input, meaning 
+            far less bandwidth is required to stream images from sensor to compute.</li>
+            <li><b>Reduced token count:</b> Segment This Thing also operates on <b>~24x</b> smaller token sets than SAM. Thus, while the model is the same size, it uses an order of
+            magnitude fewer FLOPs owing to the quadratic scaling of attention.</li>
+        </ol>
+	<p>
+	Unlike other input-reduction strategies, such as cropping or uniform downsampling, our foveated tokenization preserves full input resolution around the prompt while also providing full image-scale context through the peripheral tokens.
+	</p>
+
+    </div>
+
+    <div class="figure">
+	<video width=95% controls autoplay muted>
+	    <source src="segment_this_thing.mp4" type="video/mp4">
+	    Your browser does not support the video tag.
+	</video>
+    </div>
+
+
+    <div class="section">
+        <h2>Results</h2>
+        <p>Despite the vastly increased efficiency, our model remains competitive with SAM across a variety of datasets as measured by the standard mean intersection over union
+        (mIoU) criterion. Segment This Thing is also competitive with (and runs with lower latency than) other SAM variants such as EfficientSAM and MobileSAM.</p>
+    
+        <div class="figure">
+            <img src="figs/results_bar.png" alt="Bar chart showing the main results."/>
+        </div>
+        
+        <p>Please refer to the paper for more details!</p>
+
+    </div>
+    
+</body>
+</html>
+
