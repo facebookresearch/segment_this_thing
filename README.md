@@ -3,7 +3,7 @@ This is the official code release associated with the CVPR 2025 paper "Segment T
 
 [Tanner Schmidt](https://tschmidt23.github.io/), [Richard Newcombe](https://rapiderobot.bitbucket.io/)
 
-[Paper](https://openaccess.thecvf.com/content/CVPR2025/papers/Schmidt_Segment_This_Thing_Foveated_Tokenization_for_Efficient_Point-Prompted_Segmentation_CVPR_2025_paper.pdf) | [Project](https://facebookresearch.github.io/segment_this_thing) | [Bibtex](#Citation)
+[Paper](https://arxiv.org/abs/2506.11131) | [Project](https://facebookresearch.github.io/segment_this_thing) | [Bibtex](#Citation)
 
 Segment This Thing builds on the previous success of [Segment Anything](https://segment-anything.com/), which used a large Transformer model to perform image segmentation given a user prompt. Segment This Thing is a more efficient alternative when the user prompt is a single point in the image. Rather than decreasing the size of the model, we apply **foveated tokenization** to the input image, which reduces the number of tokens that must be processed by the model.
 
